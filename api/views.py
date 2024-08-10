@@ -19,8 +19,11 @@ class PostViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = Post.objects.all()
         text = self.request.query_params.get('text', None)
+        group = self.request.query_params.get('group', None)
         if text is not None:
             queryset = queryset.filter(text=text)
+        if group is not None:
+            queryset = queryset.filter(group=group)
         return queryset
 
     def perform_create(self, serializer):
@@ -163,7 +166,11 @@ class GroupViewSet(viewsets.ModelViewSet):
         _mutable = data._mutable
         data._mutable = True
         group_title = request.data.get('title')
-        group_slug = slugify(group_title)
+        groups_same_title = Group.objects.filter(title=group_title).count()
+        if group_title:
+            group_slug = slugify(group_title + str(groups_same_title))
+        else:
+            group_slug = slugify(str(groups_same_title))
         request.data['slug'] = group_slug
         data._mutable = _mutable
         serializer = self.get_serializer(data=request.data)

@@ -1,4 +1,3 @@
-# TODO:  Напишите свой вариант
 from rest_framework import viewsets, status, permissions
 from api.models import Post, Comment, Group, Follow, User
 from api.serializers import PostSerializer, CommentSerializer, GroupSerializer, FollowSerializer
